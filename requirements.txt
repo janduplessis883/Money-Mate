@@ -1,0 +1,22 @@
+# Core Packages
+numpy
+pandas
+
+# Visualization
+matplotlib
+seaborn
+# Jupyter
+notebook
+
+# Utilities
+colorama
+pytest
+black
+streamlit
+loguru
+
+# SHeetHelper Reequirements
+gspread
+google-auth
+
+streamlit-shadcn-ui
