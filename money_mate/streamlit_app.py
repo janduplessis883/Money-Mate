@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import altair as alt
 
-from money_mate.utils import *
+from utils import *
 
 
 # Set the page configuration to have a wide layout and the sidebar collapsed on load
