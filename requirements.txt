@@ -1,6 +1,6 @@
 # Core Packages
-numpy
-pandas
+numpy==1.26.4
+
 
 # Visualization
 matplotlib
@@ -20,3 +20,8 @@ gspread
 google-auth
 
 streamlit-shadcn-ui
+
+# For Streamlit Google Sheet Connection to work from Community Cloud
+st-gsheets-connection
+
+pandas
