@@ -92,9 +92,21 @@ else:
         line_chart = alt.Chart(filtered_bank_statement).mark_line(interpolate='step-after', color='#dcbc46').encode(
             x=alt.X('Date:T', axis=alt.Axis(grid=True)),
             y=alt.Y('Cumulative Amount:Q', axis=alt.Axis(grid=True))
+        ).properties(
+            width=600,
+            height=400,
+            title="Cumulative Amount Over Time"
         )
 
-        st.altair_chart(line_chart, use_container_width=True, theme="streamlit")
+        # Red dashed line at y=0
+        rule = alt.Chart(filtered_bank_statement).mark_rule(color='red', strokeDash=[5,5]).encode(
+            y=alt.datum(0)
+        )
+
+        # Combine the line chart and the rule
+        chart = alt.layer(line_chart, rule)
+
+        st.altair_chart(chart, use_container_width=True, theme="streamlit")
 
 
 
