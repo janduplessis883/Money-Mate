@@ -13,7 +13,7 @@ from utils import *
 
 # Set the page configuration to have a wide layout and the sidebar collapsed on load
 st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
-
+st.logo('images/mmlogo.png')
 # Function to check passcode
 def check_passcode():
     passcode = st.secrets["passcode"]["pin"]
@@ -52,7 +52,7 @@ else:
 
     # -- END Configure Sidebar -----------------------------------------------------------------------------------------
 
-    tabs = ui.tabs(options=['Account Summary', 'Budget', 'Account History', 'View | Update - Budget', 'View | Update - Bank Statement'], default_value='Account Summary', key="tab_bar1")
+    tabs = ui.tabs(options=['Account Summary', 'Budget', 'Income & Expenses - History', 'View | Update - Budget', 'View | Update - Bank Statement'], default_value='Account Summary', key="tab_bar1")
 
     gsheets = GSheetsConnection(...)
     # Continue with the rest of your app
@@ -85,60 +85,75 @@ else:
 
     if tabs == "Account Summary":
         st.subheader("Account Summary")
-        st.toast(body="""**Account Summary** - Monzo Bank""", icon="💷")
+        st.toast(body="""**Account Summary** - Monzo Bank""", icon=":material/currency_exchange:")
 
+
+        line_chart = alt.Chart(filtered_bank_statement).mark_line(interpolate='step-after', color='#dcbc46').encode(
+            x=alt.X('Date:T', axis=alt.Axis(grid=True)),
+            y=alt.Y('Cumulative Amount:Q', axis=alt.Axis(grid=True))
+        )
+
+        st.altair_chart(line_chart, use_container_width=True, theme="streamlit")
 
 
 
     elif tabs == "Budget":
         st.subheader("Budget")
-        st.toast(body="""**Monthly Budget** to date.""", icon="😀")
+        st.toast(body="""**Monthly Budget** to date""", icon=":material/star:")
 
         c1, c2, c3, c4 = st.columns(4)
-        c1.metric(label="Total Monthly Budget", value=str(total_budget))
-        c2.metric(label="Budget Used this Month", value=str(budget_used_sum))
-        c3.metric(label="Remaining Allocation", value=str(remaining_budget))
-        c4.metric(label="Anticipated Surplus", value=str(projected_disposable_income))
+        c1.metric(label="Total Monthly Budget", value="£ "+str(total_budget))
+        c2.metric(label="Budget Used this Month", value="£ "+str(budget_used_sum))
+        c3.metric(label="Remaining Allocation", value="£ "+str(remaining_budget))
+        c4.metric(label="Anticipated Surplus", value="£ "+str(projected_disposable_income))
 
-        # Create the horizontal bar plot
-        plt.figure(figsize=(20, 6), dpi=300)
-        colors = ['#ad2c6a' if val >= 0 else '#f3bd66' for val in current_minus_income['Diff']]
 
-        bars = plt.barh(current_minus_income['categories'], current_minus_income['Diff'], color=colors)
-
-        # Add data labels inside the bars
-        for bar in bars:
-            plt.text(
-                bar.get_width() if bar.get_width() < 0 else bar.get_width() + 1,
-                bar.get_y() + bar.get_height() / 2,
-                f'{bar.get_width():.2f}',
-                va='center',
-                ha='right' if bar.get_width() < 0 else 'left',
-                color='black'
+        bar_chart = alt.Chart(current_minus_income).mark_bar().encode(
+            y=alt.Y("categories:N", axis=alt.Axis(title="Categories", grid=True)),
+            x=alt.X("Diff:Q", axis=alt.Axis(title="Difference")),
+            color=alt.condition(
+                alt.datum.Diff > 0,
+                alt.value("rgb(149, 92, 130)"),  # The positive color (approximation of the purple in the example)
+                alt.value("#dcbc46")  # The negative color (approximation of the orange in the example)
             )
+        ).properties(
+            width=600,
+            height=500,  # Adjust the height to fit all categories properly
+            title="Budget Difference by Category"
+        )
 
-        # Set labels and title
-        plt.xlabel('Difference')
-        plt.ylabel('Categories')
-        plt.title('Budget Difference by Category')
-        plt.gca().invert_yaxis()  # To display the highest values at the top
+        # Text labels
+        text = bar_chart.mark_text(
+            align='left',
+            baseline='middle',
+            dx=5,  # Nudges text to right so it doesn't appear on top of the bar
+            color='black'  # Set text color to black
+        ).encode(
+            text=alt.Text('Diff:Q', format='.2f'),
+            x=alt.X('Diff:Q',
+                    axis=alt.Axis(title='Difference'),
+                    stack=None,
+                    scale=alt.Scale(domain=[-300, 300]),
+                    impute=None),
+            color=alt.condition(
+                alt.datum.Diff > 0,
+                alt.value("black"),  # The color of the text for positive bars
+                alt.value("black")  # The color of the text for negative bars
+            )
+        )
 
-        # Remove borders
-        plt.gca().spines['top'].set_visible(False)
-        plt.gca().spines['right'].set_visible(False)
-        plt.gca().spines['bottom'].set_visible(False)
-        plt.gca().spines['left'].set_visible(False)
-        # Add grid with specified linewidth and alpha
-        plt.grid(True, linewidth=0.5, alpha=0.6)
-        plt.tight_layout()
-        st.pyplot(plt)
+        # Combine bar chart and text labels
+        line_chart = alt.layer(bar_chart, text)
+
+        st.altair_chart(line_chart, use_container_width=True, theme="streamlit")
 
 
 
         c1, c2, c3, c4 = st.columns(4)
-        c1.metric(label="Over Budget to date", value=str(over_spent))
-        c2.metric(label="Realized Surplus", value=str(actual_disposable_income))
-        c4.metric(label="Remaining Daily Budget", value=str(daily_budget))
+        c1.metric(label="Over Budget to date", value="£ "+str(over_spent))
+        c2.metric(label="Realized Surplus", value="£ "+str(actual_disposable_income))
+        c3.metric(label="Payday Countdown", value=str(days_remaining)+" days")
+        c4.metric(label="Remaining Daily Budget", value="£ "+str(daily_budget))
 
         st.divider()
         switch_value1 = ui.switch(default_checked=False, label="Show Budget Calculation", key="switch1")
@@ -148,17 +163,92 @@ else:
         if switch_value2:
             st.dataframe(filtered_bank_statement)
 
-    elif tabs == "Account History":
-        st.subheader("Account History")
-        st.toast(body="""Viewing **Income & Expenses History**""", icon="📈")
+    elif tabs == "Income & Expenses - History":
+        st.subheader("Income & Expenses - History")
+        st.toast(body="""**Income & Expenses** - History""", icon=":material/shopping_cart_checkout:")
+
+        select_list = list(current['categories'].unique())
+        selected_categories = st.sidebar.multiselect(
+            'Select Categories to Display',
+            options=select_list,
+            default=['Eating Out', 'Groceries', 'Travel', 'Telephone']
+        )
+        select_years = list(data['year'].unique())
+        show_year = st.sidebar.multiselect(
+            'Select Years to Display',
+            options=select_years,
+            default=[2024, 2023]
+        )
+
+        print_df = st.sidebar.checkbox(label="View Dataframe")
+
+        filtered_data = data[
+            (data["categories"].isin(selected_categories)) & (data["year"].isin(show_year))
+        ]
+        total_spend = filtered_data["Amount"].sum().round(2)
+
+        cat_amount_df = return_cat_amount_df(filtered_data)
+        name_amount_df = return_name_amount_df(filtered_data)
+        cat_amount_date_df_week = return_cat_amount_date_df(filtered_data, period="W")
+        cat_amount_date_df_mth = return_cat_amount_date_df(filtered_data, period="M")
+        cat_amount_date_df_year = return_cat_amount_date_df(filtered_data, period="Y")
+
+        c1, c2 = st.columns(2)
+
+        with c1:
+            chart_cat = alt.Chart(cat_amount_df).mark_arc(innerRadius=60).encode(
+                theta="Amount",
+                color="categories:N",
+            )
+            # Display the chart in Streamlit
+            st.altair_chart(chart_cat, use_container_width=True, theme="streamlit")
+
+        with c2:
+            chart_name = alt.Chart(name_amount_df).mark_arc(innerRadius=60).encode(
+                theta="Amount",
+                color="Name:N",
+            )
+            # Display the chart in Streamlit
+            st.altair_chart(chart_name, use_container_width=True, theme="streamlit")
+            st.metric(label="Total Spend", value="£ "+str(total_spend))
+
+
+        st.subheader("Week")
+        line_week = alt.Chart(cat_amount_date_df_week).mark_line(interpolate="monotone").encode(
+            x="Date:T",
+            y="Amount:Q",
+            color="categories:N"
+        )
+        st.altair_chart(line_week, use_container_width=True, theme="streamlit")
+
+        st.subheader("Month")
+        line_mth = alt.Chart(cat_amount_date_df_mth).mark_line(interpolate="monotone", point=True).encode(
+            x=alt.X("Date:T", axis=alt.Axis(grid=True)),
+            y=alt.Y("Amount:Q", axis=alt.Axis(grid=True)),
+            color="categories:N"
+        )
+        st.altair_chart(line_mth, use_container_width=True, theme="streamlit")
+        st.subheader("Year")
+        line_year = alt.Chart(cat_amount_date_df_year).mark_line(interpolate="monotone", point=True).encode(
+            x="Date:T",
+            y="Amount:Q",
+            color="categories:N"
+        )
+        st.altair_chart(line_year, use_container_width=True, theme="streamlit")
+
+        if print_df == True:
+            st.divider()
+            st.dataframe(cat_amount_date_df_mth)
+
+
 
     elif tabs == "View | Update - Budget":
         st.subheader("Budget Documents")
-        st.toast(body="""Viewing **Budget DataFrames**""", icon="🔢")
-        with st.expander(label="Budget - DataFrame", icon="🔢"):
+        st.toast(body="""**Budget** - DataFrames""", icon=":material/savings:")
+        with st.expander(label="Budget - DataFrame", icon=":material/savings:"):
             st.dataframe(budget)
 
-        with st.expander(label="Budget prepped with Statement Info - DataFrame", icon="🔢"):
+        with st.expander(label="Budget prepped with Statement Info - DataFrame", icon=":material/credit_card:"):
             st.dataframe(current)
 
         with st.expander(label="Budget - Google Sheet", icon="📋"):
@@ -169,7 +259,7 @@ else:
 
     elif tabs == "View | Update - Bank Statement":
         st.subheader("Bank Statements")
-        st.toast(body="""Viewing **Bank Statements - Dataframes**""", icon="🔢")
+        st.toast(body="""**Bank Statements** - Dataframes""", icon=":material/credit_card:")
         with st.expander(label="Account Statement - DataFrame", icon="🔢"):
             st.dataframe(data)
 

@@ -362,3 +362,21 @@ def prep_budget_metrics(current, days_remaining):
     actual_disposable_income = ((income_value - total_budget) - abs(over_spent)).round(2)
 
     return total_budget, income_value, budget_used_sum, over_spent, remaining_budget, daily_budget, projected_disposable_income, actual_disposable_income
+
+
+def return_cat_amount_df(filtered_data):
+    cat_amount_df = filtered_data.groupby('categories').agg({'Amount': 'sum'}).reset_index()
+
+    return cat_amount_df
+
+def return_name_amount_df(filtered_data):
+    name_amount_df = filtered_data.groupby('Name').agg({'Amount': 'sum'}).reset_index()
+
+    return name_amount_df
+
+def return_cat_amount_date_df(filtered_data, period="W"):
+    filtered_data = filtered_data.set_index('Date')
+    # Group by 'categories' and resample within each group, then aggregate 'Amount'
+    cat_amount_date_df = filtered_data.groupby('categories').resample(period).agg({'Amount': 'sum'}).reset_index()
+
+    return cat_amount_date_df
