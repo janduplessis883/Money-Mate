@@ -26,7 +26,7 @@ def check_passcode():
             st.write()
             st.write()
             ui.badges(badge_list=[("Incorrect Passcode, please try again.", "default")], class_name="flex gap-2", key="error1")
-            st.toast(body="Incorrect Password", icon="‼️")
+            st.toast(body="Incorrect Password", icon=":material/lock_person:")
 
 # Check if the user is authenticated
 if "authenticated" not in st.session_state:
@@ -89,7 +89,7 @@ else:
         st.toast(body="""**Account Summary** - Monzo Bank""", icon=":material/currency_exchange:")
 
 
-        line_chart = alt.Chart(filtered_bank_statement).mark_line(interpolate='step-after', color='#dcbc46').encode(
+        line_chart = alt.Chart(filtered_bank_statement).mark_line(interpolate='step-after', color='#ec924f').encode(
             x=alt.X('Date:T', axis=alt.Axis(grid=True)),
             y=alt.Y('Cumulative Amount:Q', axis=alt.Axis(grid=True))
         ).properties(
@@ -99,7 +99,7 @@ else:
         )
 
         # Red dashed line at y=0
-        rule = alt.Chart(filtered_bank_statement).mark_rule(color='red', strokeDash=[5,5]).encode(
+        rule = alt.Chart(filtered_bank_statement).mark_rule(color='#bb3b54', strokeDash=[5,5]).encode(
             y=alt.datum(0)
         )
 
