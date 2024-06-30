@@ -12,7 +12,7 @@ from utils import *
 
 
 # Set the page configuration to have a wide layout and the sidebar collapsed on load
-st.set_page_config(layout="wide", initial_sidebar_state="collapsed")
+st.set_page_config(layout="wide", initial_sidebar_state="collapsed", page_title="Money-Mate")
 st.logo('images/mmlogo.png')
 # Function to check passcode
 def check_passcode():
