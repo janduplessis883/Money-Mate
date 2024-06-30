@@ -4,13 +4,13 @@
 base = "light"
 
 # Primary color for your app, specified as a hex or named CSS color
-primaryColor = "#ad2c6a"
+primaryColor = "#a4166c"
 
 # Background color for your app
 backgroundColor = "#FFFFFF"
 
 # Secondary background color for your app
-secondaryBackgroundColor = "#f3bd66"
+secondaryBackgroundColor = "#f6ca6d"
 
 # Text color for your app
 textColor = "#262730"

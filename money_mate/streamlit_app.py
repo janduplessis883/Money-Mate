@@ -7,6 +7,7 @@ import altair as alt
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import altair as alt
+import time
 
 from utils import *
 
@@ -79,8 +80,14 @@ else:
     current_minus_income = budget_df_min_income(current)
 
 
-
-
+    # Global button with metircs reminders
+    if st.sidebar.button('Account Overview'):
+        st.toast(f"""### Payday Countdown: {days_remaining}""", icon=":material/event:")
+        time.sleep(1.5)
+        st.toast(f"""**Remaining Budget**: £ {remaining_budget}""", icon=":material/forward_media:")
+        time.sleep(1.5)
+        st.toast(f"""**Daily Budget**: £ {daily_budget}""", icon=":material/light_mode:")
+        time.sleep(2)
 
 
 
@@ -126,8 +133,8 @@ else:
             x=alt.X("Diff:Q", axis=alt.Axis(title="Difference")),
             color=alt.condition(
                 alt.datum.Diff > 0,
-                alt.value("rgb(149, 92, 130)"),  # The positive color (approximation of the purple in the example)
-                alt.value("#dcbc46")  # The negative color (approximation of the orange in the example)
+                alt.value("#3f799c"),  # The positive color (approximation of the purple in the example)
+                alt.value("#f3c15f")  # The negative color (approximation of the orange in the example)
             )
         ).properties(
             width=600,
