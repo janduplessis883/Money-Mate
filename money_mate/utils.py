@@ -281,7 +281,7 @@ mapping = {
 }
 
 def categorize(name):
-    name = name.lower()
+    #name = name.lower()
     for category, names in mapping.items():
         for n in names:
             if n.lower() in name:
