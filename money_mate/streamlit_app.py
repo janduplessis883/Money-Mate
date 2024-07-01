@@ -172,7 +172,7 @@ else:
         c1, c2, c3, c4 = st.columns(4)
         c1.metric(label="Over Budget to date", value="£ "+str(over_spent))
         c2.metric(label="Realized Surplus", value="£ "+str(actual_disposable_income))
-        c3.metric(label="Payday Countdown", value=str(days_remaining)+" days")
+        c3.metric(label="Payday in", value=str(days_remaining)+" days")
         c4.metric(label="Remaining Daily Budget", value="£ "+str(daily_budget))
 
         st.divider()
