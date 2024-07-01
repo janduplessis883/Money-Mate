@@ -210,7 +210,7 @@ else:
         print_df = st.sidebar.checkbox(label="View Dataframe")
 
         filtered_data = data[
-            (data["categories"].isin(selected_categories)) & (data["year"].isin(show_year) & (data["month_name"].isin(show_month))
+            (data["categories"].isin(selected_categories)) & (data["year"].isin(show_year) & (data["month_name"].isin(show_month)))
         ]
         total_spend = filtered_data["Amount"].sum().round(2)
 
