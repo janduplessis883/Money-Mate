@@ -111,7 +111,6 @@ mapping = {
         "Waitrose & Partners",
         "M&S",
         "Tesco",
-        "London Taxi 77619",
         "Sainsbury’s",
         "Co-op",
         "Deepak Self Service",
@@ -174,7 +173,7 @@ mapping = {
         "plan.com",
         "giffgaff",
     ],
-    "Rent": ["Hampton Management", "Hampton Rent"],
+    "Rent+Elec": ["Hampton Management", "Hampton Rent"],
     "Smoking": [
         "On The Goo",
         "The Smoking Jacket",
