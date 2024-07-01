@@ -270,11 +270,12 @@ mapping = {
 }
 
 def categorize(name):
-    name = name.lower()
-    for category, names in mapping.items():
-        for n in names:
-            if n.lower() in name:
-                return category
+    if isinstance(name, str):
+        name = name.lower()
+        for category, names in mapping.items():
+            for n in names:
+                if n.lower() in name:
+                    return category
     return "Uncategorized"
 
 
