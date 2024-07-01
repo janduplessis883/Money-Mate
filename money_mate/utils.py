@@ -76,7 +76,6 @@ mapping = {
         "Render.com",
         "Setapp",
         "Spark",
-        "Nutt Labs + Notion Vip",
         "Motion ",
         "Browserless",
         "www.make.com",
@@ -106,7 +105,7 @@ mapping = {
     "Groceries": [
         "Jms Food Store",
         "J M S Foods",
-        "Sunfield Foods ",
+        "Sunfield Foods",
         "Amazon Fresh",
         "Lidl",
         "Waitrose & Partners",
@@ -116,7 +115,6 @@ mapping = {
         "Sainsbury’s",
         "Co-op",
         "Deepak Self Service",
-        "Chelsea Food Fayre",
         "Chelsea Food Fayre",
         "Chelsea Food Worldsend",
         "Cumberland Food & Wine",
@@ -134,12 +132,11 @@ mapping = {
         "Mona Lisa Cafe",
         "Wagamama",
         "Balans West",
-        "Ollie?s House Limited",
+        "Ollie’s House Limited",
         "The Monument",
         "Pret",
         "Nando’s",
         "The Grove Tavern",
-        "Balans West",
         "Yoco Pickled Green",
         "Star Wraps",
         "Bagel Bakery Bar",
@@ -217,7 +214,6 @@ mapping = {
         "Cash App",
         "Wishtender.com",
         "Skrill3395",
-        "Jan Du plessis revolut",
         "Coinbase Payments",
         "Coinbase",
         "ATM",
@@ -228,7 +224,6 @@ mapping = {
         "Koronapay Europe",
         "A Garcia",
         "Cornelioallanj",
-
     ],
     "Credit Cards": [
         "Capital One",
@@ -245,14 +240,10 @@ mapping = {
     "Savings + Transfer": [
         "LE-TELLIER J",
         "Jan du Plessis",
-        "50p Savings  Pot",
-        "Jan Du Plessis",
-        "Savings Pot",
+        "50p Savings Pot",
         "Jan Van-Breda-Du-P",
-        "Jan Van Breda Du P",
         "Jean-Pierre LE TELLIER",
         "Complete Savings",
-
         "Plum",
     ],
     "Holiday": [
@@ -267,7 +258,6 @@ mapping = {
         "Sw5 Barbers Lt",
         "Cut And Go",
         "Old Brompton Barbers",
-        "Sw5 Barbers Lt",
     ],
     "Bank Charges": [
         "Bank Charges",
@@ -275,13 +265,12 @@ mapping = {
     "Cows+LandSA": [
         "Julie Young",
         "thom",
-        "Myra Cosio"
+        "Myra Cosio",
     ],
-
 }
 
 def categorize(name):
-    #name = name.lower()
+    name = name.lower()
     for category, names in mapping.items():
         for n in names:
             if n.lower() in name:
