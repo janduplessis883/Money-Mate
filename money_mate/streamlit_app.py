@@ -54,7 +54,7 @@ else:
 
     # -- END Configure Sidebar -----------------------------------------------------------------------------------------
 
-    tabs = ui.tabs(options=['Account Summary', 'Budget', 'Income & Expenses - History', 'View | Update - Budget', 'View | Update - Bank Statement'], default_value='Account Summary', key="tab_bar1")
+    tabs = ui.tabs(options=['Account Summary', 'Budget', 'Income & Expenses Report', 'View | Update - Budget', 'View | Update - Bank Statement'], default_value='Account Summary', key="tab_bar1")
 
     gsheets = GSheetsConnection(...)
     # Continue with the rest of your app
