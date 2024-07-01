@@ -183,21 +183,28 @@ else:
         if switch_value2:
             st.dataframe(filtered_bank_statement)
 
-    elif tabs == "Income & Expenses - History":
-        st.subheader("Income & Expenses - History")
-        st.toast(body="""**Income & Expenses** - History""", icon=":material/shopping_cart_checkout:")
+    elif tabs == "Income & Expenses Report":
+        st.subheader("Income & Expenses Report")
+        st.toast(body="""**Income & Expenses** Report""", icon=":material/shopping_cart_checkout:")
 
         select_list = list(current['categories'].unique())
         selected_categories = st.sidebar.multiselect(
             'Select Categories to Display',
             options=select_list,
-            default=['Eating Out', 'Groceries', 'Travel', 'Telephone']
+            default=['Eating Out', 'Groceries', 'Travel']
         )
         select_years = list(data['year'].unique())
         show_year = st.sidebar.multiselect(
             'Select Years to Display',
             options=select_years,
             default=[2024, 2023]
+        )
+
+        select_month = list(data['month'].unique())
+        show_month = st.sidebar.multiselect(
+            'Select MONTHS to Display',
+            options=select_month,
+            default=[1,2,3,4,5,6,7,8,9,10,11,12]
         )
 
         print_df = st.sidebar.checkbox(label="View Dataframe")
