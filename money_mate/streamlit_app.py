@@ -82,7 +82,7 @@ else:
 
     # Global button with metircs reminders
     if st.sidebar.button('Account Overview'):
-        st.toast(f"""### {days_remaining} days till 💷💷""", icon=":material/event:")
+        st.toast(f"""### {days_remaining} days till 💷 💷""", icon=":material/event:")
         time.sleep(1.5)
         st.toast(f"""**Remaining Budget**: £ {remaining_budget}""", icon=":material/forward_media:")
         time.sleep(1.5)
