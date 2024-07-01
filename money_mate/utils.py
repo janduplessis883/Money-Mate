@@ -225,7 +225,7 @@ mapping = {
         "A Garcia",
         "Cornelioallanj",
     ],
-    "Credit-Cards": [
+    "Credit Cards": [
         "Capital One",
         "Vanquis Bank",
     ],
@@ -260,7 +260,7 @@ mapping = {
         "Cut And Go",
         "Old Brompton Barbers",
     ],
-    "Bank-Charges": [
+    "Bank Charges": [
         "Bank Charges",
     ],
     "South-Africa": [
