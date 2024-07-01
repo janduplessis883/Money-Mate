@@ -173,7 +173,7 @@ mapping = {
         "plan.com",
         "giffgaff",
     ],
-    "Rent+Elec": ["Hampton Management", "Hampton Rent"],
+    "Rent": ["Hampton Management", "Hampton Rent"],
     "Smoking": [
         "On The Goo",
         "The Smoking Jacket",
