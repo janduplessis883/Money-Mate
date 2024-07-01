@@ -184,7 +184,6 @@ mapping = {
         "smoking",
     ],
     "Debt-Payment": [
-        "HMRC",
         "Credit Resource Solutions",
         "Flex",
     ],
@@ -268,6 +267,8 @@ mapping = {
         "Thom",
         "Myra Cosio",
     ],
+    "Tax":
+        ["HMRC",]
 }
 
 def categorize(name):
