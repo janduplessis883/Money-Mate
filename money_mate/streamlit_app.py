@@ -197,7 +197,7 @@ else:
         show_year = st.sidebar.multiselect(
             'Select **Years** to Display',
             options=select_years,
-            default=[2024, 2023]
+            default=[2024]
         )
 
         select_month = list(data['month_name'].unique())
