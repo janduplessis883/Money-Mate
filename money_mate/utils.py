@@ -123,7 +123,7 @@ mapping = {
         "On The Go",
         "Chelsea Food And Wine",
     ],
-    "Eating-Out": [
+    "Eating Out": [
         "Taco Bell",
         "Paul Uk Hammersmith",
         "John Forrest Master Ba",
@@ -182,7 +182,7 @@ mapping = {
         "Lucky Me Enterprise",
         "smoking",
     ],
-    "Debt-Payment": [
+    "Debt Payment": [
         "Credit Resource Solutions",
         "Flex",
     ],
