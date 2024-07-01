@@ -20,6 +20,8 @@ def time_it(func):
     return wrapper
 
 
+
+
 # Universal functions ==================================================================================================
 mapping = {
     "Stuff": [
