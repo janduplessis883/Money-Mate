@@ -189,20 +189,20 @@ else:
 
         select_list = list(current['categories'].unique())
         selected_categories = st.sidebar.multiselect(
-            'Select Categories to Display',
+            'Select **Categories** to Display',
             options=select_list,
             default=['Eating Out', 'Groceries', 'Travel']
         )
         select_years = list(data['year'].unique())
         show_year = st.sidebar.multiselect(
-            'Select Years to Display',
+            'Select **Years** to Display',
             options=select_years,
             default=[2024, 2023]
         )
 
         select_month = list(data['month_name'].unique())
         show_month = st.sidebar.multiselect(
-            'Select MONTHS to Display',
+            'Select **Months** to Display',
             options=select_month,
             default=['Jan', 'Feb', 'Mar', 'Apr', 'May','Jun', 'Jul', 'Aug','Sep', 'Oct', 'Nov', 'Dec'],
         )
@@ -210,7 +210,7 @@ else:
         print_df = st.sidebar.checkbox(label="View Dataframe")
 
         filtered_data = data[
-            (data["categories"].isin(selected_categories)) & (data["year"].isin(show_year))
+            (data["categories"].isin(selected_categories)) & (data["year"].isin(show_year) & (data["month_name"].isin(show_month))
         ]
         total_spend = filtered_data["Amount"].sum().round(2)
 
