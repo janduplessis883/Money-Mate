@@ -82,7 +82,7 @@ else:
 
     # Global button with metircs reminders
     if st.sidebar.button('Account Overview'):
-        st.toast(f"""### Payday Countdown: {days_remaining}""", icon=":material/event:")
+        st.toast(f"""### Payday in {days_remaining} days.""", icon=":material/event:")
         time.sleep(1.5)
         st.toast(f"""**Remaining Budget**: £ {remaining_budget}""", icon=":material/forward_media:")
         time.sleep(1.5)
@@ -172,7 +172,7 @@ else:
         c1, c2, c3, c4 = st.columns(4)
         c1.metric(label="Over Budget to date", value="£ "+str(over_spent))
         c2.metric(label="Realized Surplus", value="£ "+str(actual_disposable_income))
-        c3.metric(label="Payday in", value=str(days_remaining)+" days")
+        c3.metric(label="Payday Countdown", value=str(days_remaining)+" days")
         c4.metric(label="Remaining Daily Budget", value="£ "+str(daily_budget))
 
         st.divider()
@@ -197,7 +197,7 @@ else:
         show_year = st.sidebar.multiselect(
             'Select **Years** to Display',
             options=select_years,
-            default=[2024]
+            default=[2024, 2023]
         )
 
         select_month = list(data['month_name'].unique())
