@@ -200,11 +200,11 @@ else:
             default=[2024, 2023]
         )
 
-        select_month = list(data['month'].unique())
+        select_month = list(data['month_name'].unique())
         show_month = st.sidebar.multiselect(
             'Select MONTHS to Display',
             options=select_month,
-            default=[1,2,3,4,5,6,7,8,9,10,11,12]
+            default=select_month,
         )
 
         print_df = st.sidebar.checkbox(label="View Dataframe")
