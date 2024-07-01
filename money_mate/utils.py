@@ -285,6 +285,7 @@ def prep_account_statement(df):
     df["Date"] = pd.to_datetime(df["Date"], dayfirst=True)
     df["year"] = df["Date"].dt.year
     df["month"] = df["Date"].dt.month
+    df["month_name"] = df["Date"].dt.strftime('%b')
 
     df["categories"] = df["Name"].apply(categorize)
     df["Cumulative Amount"] = df["Amount"].cumsum().round(2)
