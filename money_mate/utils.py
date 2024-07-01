@@ -236,6 +236,7 @@ mapping = {
         "- GOOD RESEARCH LT",
         "EARLS CT SUR",
         "Atlantic Medical",
+        "TWL Cattle Farming",
     ],
     "Savings + Transfer": [
         "LE-TELLIER J",
@@ -264,7 +265,7 @@ mapping = {
     ],
     "Cows+LandSA": [
         "Julie Young",
-        "thom",
+        "Thom",
         "Myra Cosio",
     ],
 }
