@@ -124,7 +124,7 @@ mapping = {
         "On The Go",
         "Chelsea Food And Wine",
     ],
-    "Eating Out": [
+    "Eating-Out": [
         "Taco Bell",
         "Paul Uk Hammersmith",
         "John Forrest Master Ba",
@@ -183,7 +183,7 @@ mapping = {
         "Lucky Me Enterprise",
         "smoking",
     ],
-    "Debt Payment": [
+    "Debt-Payment": [
         "HMRC",
         "Credit Resource Solutions",
         "Flex",
@@ -225,7 +225,7 @@ mapping = {
         "A Garcia",
         "Cornelioallanj",
     ],
-    "Credit Cards": [
+    "Credit-Cards": [
         "Capital One",
         "Vanquis Bank",
     ],
@@ -260,10 +260,10 @@ mapping = {
         "Cut And Go",
         "Old Brompton Barbers",
     ],
-    "Bank Charges": [
+    "Bank-Charges": [
         "Bank Charges",
     ],
-    "Cows+LandSA": [
+    "South-Africa": [
         "Julie Young",
         "Thom",
         "Myra Cosio",
