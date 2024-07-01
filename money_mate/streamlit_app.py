@@ -204,7 +204,7 @@ else:
         show_month = st.sidebar.multiselect(
             'Select MONTHS to Display',
             options=select_month,
-            default=['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+            default=[1,2,3,4,5,6,7,8,9,10,11,12]
         )
 
         print_df = st.sidebar.checkbox(label="View Dataframe")
