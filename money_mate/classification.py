@@ -578,16 +578,16 @@ def budget_df_min_income(current):
 def calculate_variable_expenses(current):
     variable_expenses_df = current[
         (
-            (current["custom_category"] == "Barber") |
-            (current["custom_category"] == "Eating Out") |
-            (current["custom_category"] == "Groceries") |
-            (current["custom_category"] == "Holiday") |
-            (current["custom_category"] == "Shopping") |
-            (current["custom_category"] == "Smoking") |
-            (current["custom_category"] == "Transport")
+            (current["custom_category"] == "Barber")
+            | (current["custom_category"] == "Eating Out")
+            | (current["custom_category"] == "Groceries")
+            | (current["custom_category"] == "Holiday")
+            | (current["custom_category"] == "Shopping")
+            | (current["custom_category"] == "Smoking")
+            | (current["custom_category"] == "Transport")
         )
     ]
-    variable_expenses = variable_expenses_df['Budget'].sum()
+    variable_expenses = variable_expenses_df["Budget"].sum()
 
     return variable_expenses
 
@@ -595,9 +595,11 @@ def calculate_variable_expenses(current):
 def prep_budget_metrics(current, days_remaining):
     total_budget = abs(current["Budget"].sum().round(2))
 
-    income_value = abs(
-        current.loc[current["custom_category"] == "Income", "Diff"].values[0]
-    ) if not current.loc[current["custom_category"] == "Income", "Diff"].empty else 0
+    income_value = (
+        abs(current.loc[current["custom_category"] == "Income", "Diff"].values[0])
+        if not current.loc[current["custom_category"] == "Income", "Diff"].empty
+        else 0
+    )
 
     current_minus_income = budget_df_min_income(current)
     variable_expenses = calculate_variable_expenses(current_minus_income)
@@ -608,11 +610,16 @@ def prep_budget_metrics(current, days_remaining):
     )
     over_spent = abs(over_spent)
 
-
-    daily_allowance = ((variable_expenses - over_spent) / days_remaining).round(2) if days_remaining else 0
+    daily_allowance = (
+        ((variable_expenses - over_spent) / days_remaining).round(2)
+        if days_remaining
+        else 0
+    )
 
     projected_disposable_income = (income_value - total_budget).round(2)
-    actual_disposable_income = ((income_value - total_budget) - abs(over_spent)).round(2)
+    actual_disposable_income = ((income_value - total_budget) - abs(over_spent)).round(
+        2
+    )
 
     return (
         variable_expenses,

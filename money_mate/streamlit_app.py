@@ -59,6 +59,7 @@ else:
     # -- Configure Sidebar ---------------------------------------------------------------------------------------------
 
     st.sidebar.markdown("# Settings")
+
     # Function to clear cache and reload the page
     def clear_cache_and_reload():
         st.cache_data.clear()
@@ -82,7 +83,6 @@ else:
         default_value="Account Summary",
         key="tab_bar1",
     )
-
 
     # Function to determine if data is being fetched from cache
     def is_data_loading(last_fetch_time, ttl_seconds):
@@ -152,7 +152,7 @@ else:
         remaining_budget,
         daily_allowance,
         projected_disposable_income,
-        actual_disposable_income
+        actual_disposable_income,
     ) = prep_budget_metrics(current, days_remaining)
     current_minus_income = budget_df_min_income(current)
 
@@ -166,7 +166,8 @@ else:
         )
         time.sleep(1.5)
         st.toast(
-            f"""**Daily Allowance**: £ {daily_allowance}""", icon=":material/light_mode:"
+            f"""**Daily Allowance**: £ {daily_allowance}""",
+            icon=":material/light_mode:",
         )
 
     if tabs == "Account Summary":
@@ -200,33 +201,46 @@ else:
         st.header("Budget")
         st.sidebar.divider()
         # Streamlit slider
-        st.sidebar.header('Budget and Expense Tracker')
-        st.sidebar.write('Adjust your variable expenses using the slider below:')
+        st.sidebar.header("Budget and Expense Tracker")
+        st.sidebar.write("Adjust your variable expenses using the slider below:")
         variable_expenses_slider = st.sidebar.slider(
-            'Variable Expenses',
+            "Variable Expenses",
             min_value=0,
             max_value=int(variable_expenses),
-            value=int(variable_expenses) // 2
+            value=int(variable_expenses) // 2,
         )
 
-        st.sidebar.markdown(f'You have selected **£ {variable_expenses_slider}** for your variable expenses.')
+        st.sidebar.markdown(
+            f"You have selected **£ {variable_expenses_slider}** for your variable expenses."
+        )
 
         # Use the slider value in your application
         # For example, update remaining budget based on slider value
         remaining_budget_adjusted = remaining_budget - variable_expenses_slider
-        adjusted_remaining_budget = remaining_budget - (variable_expenses - variable_expenses_slider)
-        adjusted_daily_allowance = (adjusted_remaining_budget / days_remaining).round(2) if days_remaining else 0
-        st.sidebar.markdown(f'Adjusted remaining budget: **£ {remaining_budget_adjusted.round(2)}**')
-        st.sidebar.markdown(f'Adjusted daily allowance: **£ {adjusted_daily_allowance}**')
+        adjusted_remaining_budget = remaining_budget - (
+            variable_expenses - variable_expenses_slider
+        )
+        adjusted_daily_allowance = (
+            (adjusted_remaining_budget / days_remaining).round(2)
+            if days_remaining
+            else 0
+        )
+        st.sidebar.markdown(
+            f"Adjusted remaining budget: **£ {remaining_budget_adjusted.round(2)}**"
+        )
+        st.sidebar.markdown(
+            f"Adjusted daily allowance: **£ {adjusted_daily_allowance}**"
+        )
         st.sidebar.divider()
-
 
         c1, c2, c3, c4 = st.columns(4)
         c1.metric(label="Over Budget to date", value="£ " + str(over_spent))
         c2.metric(label="Realized Surplus", value="£ " + str(actual_disposable_income))
         c3.metric(label="Payday Countdown", value=str(days_remaining) + " days")
-        c4.metric(label="Daily Allowance (factoring in Over-spend)", value="£ " + str(daily_allowance))
-
+        c4.metric(
+            label="Daily Allowance (factoring in Over-spend)",
+            value="£ " + str(daily_allowance),
+        )
 
         # Define the domain for the x-axis to ensure it covers both Difference and Budget values
         x_domain = [
@@ -318,8 +332,12 @@ else:
         )
 
         with st.expander("Show Calculation", icon=":material/calculate:"):
-            st.markdown(f"Salary: **£ {income_value}** - Budget: **£ {total_budget}** = Left-over: **£ {projected_disposable_income}**")
-            st.markdown(f":blue[**Variable Expenses**: (Barber, Eating Out, Groceries, Holiday, Shopping, Smoking, Transport): **£ {variable_expenses}**] - :red[over-spent: **£ {over_spent}**] = **£ {(variable_expenses - over_spent).round(2)}**")
+            st.markdown(
+                f"Salary: **£ {income_value}** - Budget: **£ {total_budget}** = Left-over: **£ {projected_disposable_income}**"
+            )
+            st.markdown(
+                f":blue[**Variable Expenses**: (Barber, Eating Out, Groceries, Holiday, Shopping, Smoking, Transport): **£ {variable_expenses}**] - :red[over-spent: **£ {over_spent}**] = **£ {(variable_expenses - over_spent).round(2)}**"
+            )
             st.markdown(f":red[Daily Allovance: **£ {daily_allowance}**]")
 
         if st.sidebar.toggle("Show Bank Statement"):
@@ -378,7 +396,6 @@ else:
         ]
 
         total_spend = filtered_data["Amount"].sum().round(2)
-
 
         cat_amount_df = return_cat_amount_df(filtered_data)
         name_amount_df = return_name_amount_df(filtered_data)
