@@ -33,6 +33,7 @@ transaction_name_rules = {
         "Futon Ltd",
     ],
     "Eating Out": [
+        "Riverside Studios",
         "Masala",
         "Pix Pintxo Bateman",
         "Kula",

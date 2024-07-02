@@ -53,7 +53,6 @@ if not st.session_state["authenticated"]:
         )
         check_passcode()
 
-
 else:
     st.markdown("# ![Money-Mate](https://img.icons8.com/dotty/80/coins.png) Money-Mate")
 
