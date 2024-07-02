@@ -517,7 +517,7 @@ def prep_account_statement(df):
     df["custom_category"] = df.apply(classify_by_type, axis=1)
     df["custom_category"] = df.apply(refine_by_name, axis=1)
     df["Cumulative Amount"] = df["Amount"].cumsum().round(2)
-    df.to_csv("output_statement.csv", index=False)
+    # df.to_csv("output_statement.csv", index=False)
     return df
 
 

@@ -76,6 +76,7 @@ else:
         key="tab_bar1",
     )
 
+
     # Function to determine if data is being fetched from cache
     def is_data_loading(last_fetch_time, ttl_seconds):
         current_time = time.time()
