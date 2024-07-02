@@ -276,7 +276,7 @@ else:
         # Create the red dot layer for the budget
         budget_dots = (
             alt.Chart(current_minus_income)
-            .mark_point(color="#bb271a", size=10)
+            .mark_point(color="#bb271a", size=20)
             .encode(
                 x=alt.X("Budget:Q", scale=alt.Scale(domain=x_domain)),
                 y=alt.Y("custom_category:N", sort="-x"),
