@@ -198,7 +198,7 @@ else:
 
     elif tabs == "Budget":
         st.header("Budget")
-
+        st.sidebar.divider()
         # Streamlit slider
         st.sidebar.header('Budget and Expense Tracker')
         st.sidebar.write('Adjust your variable expenses using the slider below:')
@@ -220,9 +220,6 @@ else:
         st.sidebar.markdown(f'Adjusted daily allowance: **£ {adjusted_daily_allowance}**')
         st.sidebar.divider()
 
-        st.markdown(f"Salary: **£ {income_value}** - Budget: **£ {total_budget}** = Left-over: **£ {projected_disposable_income}**")
-        st.markdown(f":blue[**Variable Expenses**: (Barber, Eating Out, Groceries, Holiday, Shopping, Smoking, Transport): **£ {variable_expenses}**] - :red[over-spent: **£ {over_spent}**] = **£ {(variable_expenses - over_spent).round(2)}**")
-        st.markdown(f":red[Daily Allovance: **£ {daily_allowance}**]")
 
         c1, c2, c3, c4 = st.columns(4)
         c1.metric(label="Over Budget to date", value="£ " + str(over_spent))
@@ -276,7 +273,7 @@ else:
         # Create the red dot layer for the budget
         budget_dots = (
             alt.Chart(current_minus_income)
-            .mark_point(color="#bb271a", size=20)
+            .mark_point(color="#bb271a", size=30)
             .encode(
                 x=alt.X("Budget:Q", scale=alt.Scale(domain=x_domain)),
                 y=alt.Y("custom_category:N", sort="-x"),
@@ -319,6 +316,11 @@ else:
         c4.metric(
             label="Anticipated Surplus", value="£ " + str(projected_disposable_income)
         )
+
+        with st.expander("Show Calculation", icon=":material/calculate:"):
+            st.markdown(f"Salary: **£ {income_value}** - Budget: **£ {total_budget}** = Left-over: **£ {projected_disposable_income}**")
+            st.markdown(f":blue[**Variable Expenses**: (Barber, Eating Out, Groceries, Holiday, Shopping, Smoking, Transport): **£ {variable_expenses}**] - :red[over-spent: **£ {over_spent}**] = **£ {(variable_expenses - over_spent).round(2)}**")
+            st.markdown(f":red[Daily Allovance: **£ {daily_allowance}**]")
 
         if st.sidebar.toggle("Show Bank Statement"):
             st.divider()
