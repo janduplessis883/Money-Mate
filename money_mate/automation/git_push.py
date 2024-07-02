@@ -10,6 +10,7 @@ from money_mate.utils import time_it
 
 repo_path = LOCAL_GIT_REPO
 
+
 def get_current_branch():
     """Returns the name of the current Git branch."""
     # Run the command 'git branch --show-current' and decode the output to get the current branch
