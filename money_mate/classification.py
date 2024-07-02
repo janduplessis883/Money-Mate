@@ -608,6 +608,7 @@ def prep_budget_metrics(current, days_remaining):
     )
     over_spent = abs(over_spent)
 
+
     daily_allowance = ((variable_expenses - over_spent) / days_remaining).round(2) if days_remaining else 0
 
     projected_disposable_income = (income_value - total_budget).round(2)

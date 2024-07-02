@@ -377,6 +377,7 @@ else:
 
         total_spend = filtered_data["Amount"].sum().round(2)
 
+
         cat_amount_df = return_cat_amount_df(filtered_data)
         name_amount_df = return_name_amount_df(filtered_data)
         cat_amount_date_df_week = return_cat_amount_date_df(filtered_data, period="W")
