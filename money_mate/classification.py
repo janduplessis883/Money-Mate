@@ -418,7 +418,7 @@ transaction_name_rules = {
         "Plum",
         "Capital One Mobile App",
         "Jan Du Plessis Virgin Online Current",
-        "Transfer",
+        "Wise Transfer",
     ],
     "Rent": ["Hampton Management", "Hampton Rent", "Electricity"],
     "Smoking": [
@@ -518,41 +518,30 @@ def prep_account_statement(df):
     df["custom_category"] = df.apply(classify_by_type, axis=1)
     df["custom_category"] = df.apply(refine_by_name, axis=1)
     df["Cumulative Amount"] = df["Amount"].cumsum().round(2)
-    # df.to_csv("output_statement.csv", index=False)
     return df
 
 
 def get_account_balance(df):
     account_balance = df["Cumulative Amount"].iloc[-1]
-
     return account_balance
 
 
 def prep_budget(df):
     budget = df.groupby(by="Category")["Amount"].sum().reset_index()
     budget.columns = ["custom_category", "Budget"]
-
     return budget
 
 
 def prep_statement_import_to_budget(df):
-    # Convert the 'date' column to datetime if it isn't already
     df["Date"] = pd.to_datetime(df["Date"])
-
-    # Get the current date
     current_date = datetime.now()
 
-    # Calculate the start date for tracking (24th of the previous month)
     if current_date.day >= 24:
         start_date = current_date.replace(day=24)
     else:
-        # If the current day is less than 24, go to the previous month
         start_date = (current_date - pd.DateOffset(months=1)).replace(day=24)
 
-    # Filter the dfFrame to get rows from the start date onwards
     filtered_bank_statement = df[df["Date"] >= start_date]
-
-    # Calculate the number of days remaining until the 24th of the current month
     next_24th = current_date.replace(day=25)
     if current_date.day > 25:
         next_24th = (current_date + pd.DateOffset(months=1)).replace(day=24)
@@ -583,35 +572,55 @@ def budget_df_min_income(current):
             & (current["custom_category"] != "Rent")
         )
     ]
-
     return current_minus_income
+
+
+def calculate_variable_expenses(current):
+    variable_expenses_df = current[
+        (
+            (current["custom_category"] == "Barber") |
+            (current["custom_category"] == "Eating Out") |
+            (current["custom_category"] == "Groceries") |
+            (current["custom_category"] == "Holiday") |
+            (current["custom_category"] == "Shopping") |
+            (current["custom_category"] == "Smoking") |
+            (current["custom_category"] == "Transport")
+        )
+    ]
+    variable_expenses = variable_expenses_df['Budget'].sum()
+
+    return variable_expenses
 
 
 def prep_budget_metrics(current, days_remaining):
     total_budget = abs(current["Budget"].sum().round(2))
+
     income_value = abs(
         current.loc[current["custom_category"] == "Income", "Diff"].values[0]
-    )
+    ) if not current.loc[current["custom_category"] == "Income", "Diff"].empty else 0
+
     current_minus_income = budget_df_min_income(current)
+    variable_expenses = calculate_variable_expenses(current_minus_income)
     budget_used_sum = current_minus_income["Amount"].sum().round(2)
     remaining_budget = current_minus_income["Diff"].sum().round(2)
-    over_spent = (
+    over_spent = abs(
         current_minus_income[current_minus_income["Diff"] < 0]["Diff"].sum().round(2)
     )
-    daily_budget = (remaining_budget / days_remaining).round(2)
+    over_spent = abs(over_spent)
+
+    daily_allowance = ((variable_expenses - over_spent) / days_remaining).round(2) if days_remaining else 0
 
     projected_disposable_income = (income_value - total_budget).round(2)
-    actual_disposable_income = ((income_value - total_budget) - abs(over_spent)).round(
-        2
-    )
+    actual_disposable_income = ((income_value - total_budget) - abs(over_spent)).round(2)
 
     return (
+        variable_expenses,
         total_budget,
         income_value,
         budget_used_sum,
         over_spent,
         remaining_budget,
-        daily_budget,
+        daily_allowance,
         projected_disposable_income,
         actual_disposable_income,
     )
@@ -633,7 +642,6 @@ def return_name_amount_df(filtered_data):
 
 def return_cat_amount_date_df(filtered_data, period="W"):
     filtered_data = filtered_data.set_index("Date")
-    # Group by 'custom_category' and resample within each group, then aggregate 'Amount'
     cat_amount_date_df = (
         filtered_data.groupby("custom_category")
         .resample(period)
@@ -645,24 +653,16 @@ def return_cat_amount_date_df(filtered_data, period="W"):
 
 
 def calculate_smoking_adjustment(df):
-    # Define the boolean condition
     condition = (df["custom_category"] == "Groceries") & (
         df["Amount"].between(-15, -10)
     )
-
-    # Sum the amounts where the condition is True
     adjustment_amount = df.loc[condition, "Amount"].sum()
-
     return adjustment_amount
 
 
 def apply_smoking_adjustment(df):
-    # Define the boolean condition
     condition = (df["custom_category"] == "Groceries") & (
         df["Amount"].between(-15, -10)
     )
-
-    # Update the custom_category column based on the condition
     df.loc[condition, "custom_category"] = "Smoking"
-
     return df
