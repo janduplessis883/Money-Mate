@@ -8,14 +8,35 @@ from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 import altair as alt
 import time
+import toml
 
 from utils import *
 from classification import *
 
+# Load Setting via settings.toml file
+def load_settings(file_path="settings.toml"):
+    with open(file_path, "r") as file:
+        settings = toml.load(file)
+    return settings
+
+def save_settings(settings, file_path="settings.toml"):
+    with open(file_path, "w") as file:
+        toml.dump(settings, file)
+
+settings = load_settings()
+
+# Access settings
+app_version = settings['general']['version']
+
+smoke_min_value = settings['smoking_price_range']['smoke_min']
+smoke_max_value = settings['smoking_price_range']['smoke_max']
+
+
+# End of Settings --------------------------------------------------------------
 
 # Set the page configuration to have a wide layout and the sidebar collapsed on load
 st.set_page_config(
-    layout="wide", initial_sidebar_state="collapsed", page_title="Money-Mate"
+    layout="wide", initial_sidebar_state="collapsed", page_title="Money-Mate", page_icon=":material/savings:"
 )
 st.logo("images/mmlogo.png")
 
@@ -55,6 +76,7 @@ if not st.session_state["authenticated"]:
 
 else:
     st.markdown("# ![Money-Mate](https://img.icons8.com/dotty/80/coins.png) Money-Mate")
+    ui.badges(badge_list=[(f"version {app_version}", "outline")], class_name="flex gap-2", key="version_badge")
 
     # -- Configure Sidebar ---------------------------------------------------------------------------------------------
 
@@ -78,6 +100,7 @@ else:
             "Income & Expenses Report",
             "View | Update - Budget",
             "View | Update - Bank Statement",
+            "Budget Calculations",
             "Settings",
         ],
         default_value="Account Summary",
@@ -331,14 +354,7 @@ else:
             label="Anticipated Surplus", value="£ " + str(projected_disposable_income)
         )
 
-        with st.expander("Show Calculation", icon=":material/calculate:"):
-            st.markdown(
-                f"Salary: **£ {income_value}** - Budget: **£ {total_budget}** = Left-over: **£ {projected_disposable_income}**"
-            )
-            st.markdown(
-                f":blue[**Variable Expenses**: (Barber, Eating Out, Groceries, Holiday, Shopping, Smoking, Transport): **£ {variable_expenses}**] - :red[over-spent: **£ {over_spent}**] = **£ {(variable_expenses - over_spent).round(2)}**"
-            )
-            st.markdown(f":red[Daily Allovance: **£ {daily_allowance}**]")
+
 
         if st.sidebar.toggle("Show Bank Statement"):
             st.divider()
@@ -504,5 +520,48 @@ else:
                 height=600,
             )
 
+    elif tabs == "Budget Calculations":
+        st.header("Budget Calculations")
+
+        with st.expander("**Fixed Expenses** - calculation", icon=":material/calculate:"):
+            st.markdown(
+                f"Salary: **£ {income_value}** - Budget: **£ {total_budget}** = Left-over: **£ {projected_disposable_income}**"
+            )
+            st.markdown(
+                f":blue[**Variable Expenses**: (Barber, Eating Out, Groceries, Holiday, Shopping, Smoking, Transport): **£ {variable_expenses}**] - :red[over-spent: **£ {over_spent}**] = **£ {(variable_expenses - over_spent).round(2)}**"
+            )
+            st.markdown(f":red[Daily Allovance: **£ {daily_allowance}**]")
+
+
     elif tabs == "Settings":
         st.header("Settings")
+
+        with st.container(height=500, border=True):
+            st.subheader("General Settings")
+
+            version = st.text_input("Version", settings['general']['version'])
+
+            smoke_min, smoke_max = st.slider(
+                label="Select a range",
+                min_value=10.00,
+                max_value=20.00,
+                value=(smoke_min_value, smoke_max_value),
+                step=0.05,
+                format="%.2f"
+            )
+
+            # Display the selected values
+            st.write(f"Selected range: {smoke_min} to {smoke_max}")
+
+
+            if st.button("Save Settings"):
+                settings['general']['version'] = version
+                settings['smoking_price_range']['smoke_min'] = smoke_min
+                settings['smoking_price_range']['smoke_max'] = smoke_max
+
+                save_settings(settings)
+                st.success("Settings updated successfully!")
+
+        # Display updated settings
+        st.write("Current Settings:")
+        st.write(settings)

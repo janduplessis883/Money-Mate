@@ -1,0 +1,8 @@
+[general]
+version = "0.1.8"
+
+[budget]
+
+[smoking_price_range]
+smoke_min = 13.7
+smoke_max = 15.5

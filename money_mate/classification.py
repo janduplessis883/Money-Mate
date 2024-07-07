@@ -1,6 +1,23 @@
 import pandas as pd
 from datetime import datetime, timedelta
 import streamlit as st
+import toml
+
+# Load Setting via settings.toml file
+def load_settings(file_path="settings.toml"):
+    with open(file_path, "r") as file:
+        settings = toml.load(file)
+    return settings
+
+settings = load_settings()
+
+# Access settings
+app_version = settings['general']['version']
+
+smoke_min_value = settings['smoking_price_range']['smoke_min']
+smoke_max_value = settings['smoking_price_range']['smoke_max']
+
+
 
 transaction_type_rules = {
     "wise_cashback": "Income",
@@ -662,7 +679,7 @@ def return_cat_amount_date_df(filtered_data, period="W"):
 
 def calculate_smoking_adjustment(df):
     condition = (df["custom_category"] == "Groceries") & (
-        df["Amount"].between(-15, -10)
+        df["Amount"].between(-smoke_min_value, -smoke_max_value)
     )
     adjustment_amount = df.loc[condition, "Amount"].sum()
     return adjustment_amount
@@ -670,7 +687,7 @@ def calculate_smoking_adjustment(df):
 
 def apply_smoking_adjustment(df):
     condition = (df["custom_category"] == "Groceries") & (
-        df["Amount"].between(-15, -10)
+        df["Amount"].between(-smoke_min_value, -smoke_max_value)
     )
     df.loc[condition, "custom_category"] = "Smoking"
     return df
