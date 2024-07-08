@@ -92,7 +92,7 @@ if not st.session_state["authenticated"]:
         check_passcode()
 
 else:
-    st.markdown("# ![Money-Mate](https://img.icons8.com/dotty/80/coins.png) Money-Mate")
+    st.markdown("# ![Money-Mate](https://img.icons8.com/ios/50/coins--v1.png) Money-Mate")
     ui.badges(badge_list=[(f"version {app_version}", "outline")], class_name="flex gap-2", key="version_badge")
 
     # -- Configure Sidebar ---------------------------------------------------------------------------------------------
