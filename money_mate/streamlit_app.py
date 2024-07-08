@@ -49,6 +49,7 @@ smoking_value = settings['budget']['smoking']
 subscriptions_value = settings['budget']['subscriptions']
 sa_investment_value = settings['budget']['sa_investment']
 uncategorized_value = settings['budget']['uncategorized']
+income_amount = settings['salary']['income']
 # End of Settings --------------------------------------------------------------
 
 # Set the page configuration to have a wide layout and the sidebar collapsed on load
@@ -188,7 +189,6 @@ else:
     (
         variable_expenses,
         total_budget,
-        income_amount,
         budget_used_sum,
         over_spent,
         remaining_budget,
@@ -217,27 +217,35 @@ else:
 
         st.metric("Monzo Account Balance", value="£ " + str(account_balance))
 
-        line_chart = (
-            alt.Chart(filtered_bank_statement)
-            .mark_line(interpolate="step-after", color="#ec924f")
-            .encode(
-                x=alt.X("Date:T", axis=alt.Axis(grid=True)),
-                y=alt.Y("Cumulative Amount:Q", axis=alt.Axis(grid=True)),
+        c1, c2 = st.columns(2)
+        with c1:
+            line_chart = (
+                alt.Chart(filtered_bank_statement)
+                .mark_line(interpolate="step-after", color="#ec924f")
+                .encode(
+                    x=alt.X("Date:T", axis=alt.Axis(grid=True)),
+                    y=alt.Y("Cumulative Amount:Q", axis=alt.Axis(grid=True)),
+                )
+                .properties(width=600, height=400, title="Cumulative Amount Over Time")
             )
-            .properties(width=600, height=400, title="Cumulative Amount Over Time")
-        )
 
-        # Red dashed line at y=0
-        rule = (
-            alt.Chart(filtered_bank_statement)
-            .mark_rule(color="#bb3b54", strokeDash=[5, 5])
-            .encode(y=alt.datum(0))
-        )
+            # Red dashed line at y=0
+            rule = (
+                alt.Chart(filtered_bank_statement)
+                .mark_rule(color="#bb3b54", strokeDash=[5, 5])
+                .encode(y=alt.datum(0))
+            )
 
-        # Combine the line chart and the rule
-        chart = alt.layer(line_chart, rule)
+            # Combine the line chart and the rule
+            chart = alt.layer(line_chart, rule)
 
-        st.altair_chart(chart, use_container_width=True, theme="streamlit")
+            st.altair_chart(chart, use_container_width=True, theme="streamlit")
+
+        with c2:
+            st.write("")
+            st.write("")
+            st.write("")
+            st.dataframe(filtered_bank_statement.tail(7))
 
     elif tabs == "Budget":
         st.header("Budget")
@@ -330,7 +338,7 @@ else:
         # Create the red dot layer for the budget
         budget_dots = (
             alt.Chart(current_minus_income)
-            .mark_point(color="#bb271a", size=30)
+            .mark_point(color="#bb271a", size=80)
             .encode(
                 x=alt.X("Budget:Q", scale=alt.Scale(domain=x_domain)),
                 y=alt.Y("custom_category:N", sort="-x"),
@@ -574,7 +582,8 @@ else:
             # Display the selected values
             st.write(f"Selected range: {smoke_min} to {smoke_max}")
 
-
+            st.subheader("Income")
+            income = st.number_input("Enter Salary / Income for the month.", value=income_amount)
             # Create sliders for each category
             st.subheader("Budget Settings (Fixed Expenses)")
             rent = st.slider("Set budget for **Rent**", 0, 1500, rent_value)
@@ -630,6 +639,7 @@ else:
                 settings['budget']['sa_investment'] = sa_investment
                 settings['budget']['uncategorized'] = uncategorized
 
+                settings['salary']['income'] = income
 
                 save_settings(settings)
                 st.success("Settings updated successfully!")

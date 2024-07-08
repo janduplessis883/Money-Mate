@@ -17,7 +17,7 @@ app_version = settings['general']['version']
 smoke_min_value = settings['smoking_price_range']['smoke_min']
 smoke_max_value = settings['smoking_price_range']['smoke_max']
 
-
+income_amount = settings['salary']['income']
 
 transaction_type_rules = {
     "wise_cashback": "Income",
@@ -634,13 +634,8 @@ def calculate_fixed_expenses(current):
 
 def prep_budget_metrics(current, days_remaining):
     total_budget = abs(current["Budget"].sum().round(2))
-
-    income_row = current[current['custom_category'] == 'Income']
-    income_amount = income_row['Amount'].values
-    if len(income_amount) == 1:
-        income_amount = income_amount[0]
+    variable_expenses = calculate_variable_expenses(current)
     current_minus_income = budget_df_min_income(current)
-    variable_expenses = calculate_variable_expenses(current_minus_income)
     budget_used_sum = current_minus_income["Amount"].sum().round(2)
     remaining_budget = abs(
         current_minus_income[current_minus_income["Diff"] > 0]["Diff"].sum().round(2)
@@ -652,7 +647,7 @@ def prep_budget_metrics(current, days_remaining):
 
 
     daily_allowance = (
-        ((variable_expenses - over_spent) / days_remaining).round(2)
+        ((calculate_variable_expenses(current)) / days_remaining).round(2)
         if days_remaining
         else 0
     )
@@ -665,7 +660,6 @@ def prep_budget_metrics(current, days_remaining):
     return (
         variable_expenses,
         total_budget,
-        income_amount,
         budget_used_sum,
         over_spent,
         remaining_budget,

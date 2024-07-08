@@ -24,3 +24,6 @@ uncategorized = 0
 [smoking_price_range]
 smoke_min = 11.2
 smoke_max = 19.85
+
+[salary]
+income = 3028.98
