@@ -612,7 +612,7 @@ def calculate_variable_expenses(current):
 def prep_budget_metrics(current, days_remaining):
     total_budget = abs(current["Budget"].sum().round(2))
 
-    income_value = current.iloc[current['custom_category'] == 'Income', 'Amount']
+    income_value = current.loc[current['custom_category'] == 'Income', 'Amount'].value[0]
 
     current_minus_income = budget_df_min_income(current)
     variable_expenses = calculate_variable_expenses(current_minus_income)
