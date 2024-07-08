@@ -4,7 +4,7 @@ import streamlit as st
 import toml
 
 # Load Setting via settings.toml file
-def load_settings(file_path="../settings.toml"):
+def load_settings(file_path="settings.toml"):
     with open(file_path, "r") as file:
         settings = toml.load(file)
     return settings
