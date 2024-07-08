@@ -280,7 +280,7 @@ else:
         c2.metric(label="Remaining Budget", value="£ " + str(remaining_budget))
         c3.metric(label="Over-spent", value="£ " + str(over_spent))
         c4.metric(
-            label="Remaining minus Over-spent",
+            label="Projected Spending this month.",
             value="£ " + str(total_budget + over_spent),
         )
 
