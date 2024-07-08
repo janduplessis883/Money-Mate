@@ -31,7 +31,24 @@ app_version = settings['general']['version']
 smoke_min_value = settings['smoking_price_range']['smoke_min']
 smoke_max_value = settings['smoking_price_range']['smoke_max']
 
-
+rent_value = settings['budget']['rent']
+tax_value = settings['budget']['tax']
+credit_cards_value = settings['budget']['credit_cards']
+telephone_value = settings['budget']['telephone']
+bank_charges_value = settings['budget']['bank_charges']
+medical_value = settings['budget']['medical']
+barber_value = settings['budget']['barber']
+eating_out_value = settings['budget']['eating_out']
+groceries_value = settings['budget']['groceries']
+holiday_value = settings['budget']['holiday']
+loan_value = settings['budget']['loan']
+other_value = settings['budget']['other']
+transport_value = settings['budget']['transport']
+shopping_value = settings['budget']['shopping']
+smoking_value = settings['budget']['smoking']
+subscriptions_value = settings['budget']['subscriptions']
+sa_investment_value = settings['budget']['sa_investment']
+uncategorized_value = settings['budget']['uncategorized']
 # End of Settings --------------------------------------------------------------
 
 # Set the page configuration to have a wide layout and the sidebar collapsed on load
@@ -150,10 +167,12 @@ else:
             st.session_state.last_fetch_personal_account = time.time()
 
     # Read Budget
-    regular_expenses = conn.read(
-        worksheet="Budget",
-        ttl="20m",
-    )
+    budget_data = {
+        "Budget Category": ["Rent", "Tax", "Credit Cards", "Telephone", "Bank Charges", "Medical", "Transport", "Subscriptions", "Barber", "Eating Out", "Groceries", "Holiday", "Loan", "Other", "Shopping", "Smoking", "SA Investment", "Uncategorized"],
+        "Budget Amount": [rent_value, tax_value, credit_cards_value, telephone_value, bank_charges_value, medical_value, transport_value, subscriptions_value, barber_value, eating_out_value, groceries_value, holiday_value, loan_value, other_value, shopping_value, smoking_value, sa_investment_value, uncategorized_value],
+    }
+    regular_expenses = pd.DataFrame(budget_data)
+
 
     # Check if data is fresh and display toast if so
     if is_data_loading(st.session_state.last_fetch_budget, ttl_seconds):
@@ -536,7 +555,8 @@ else:
     elif tabs == "Settings":
         st.header("Settings")
 
-        with st.container(height=500, border=True):
+        col1, col2 = st.columns(2)
+        with col1:
             st.subheader("General Settings")
 
             version = st.text_input("Version", settings['general']['version'])
@@ -554,14 +574,69 @@ else:
             st.write(f"Selected range: {smoke_min} to {smoke_max}")
 
 
+            # Create sliders for each category
+            st.subheader("Budget Settings (Fixed Expenses)")
+            rent = st.slider("Set budget for **Rent**", 0, 1500, rent_value)
+            tax = st.slider("Set budget for **Tax**", 0, 300, tax_value)
+            credit_cards = st.slider("Set budget for **Credit Cards**", 0, 4000, credit_cards_value)
+            telephone = st.slider("Set budget for **Telephone**", 0, 400, telephone_value)
+            bank_charges = st.slider("Set budget for **Bank Charges**", 0, 50, bank_charges_value)
+            medical = st.slider("Set budget for **Medical**", 0, 50, medical_value)
+            transport = st.slider("Set budget for **Transport**", 0, 100, transport_value)
+
+            st.subheader("Budget Settings (Variable Expenses)")
+            subscriptions = st.slider("Set budget for **Subscriptions**", 0, 200, subscriptions_value)
+            barber = st.slider("Set budget for **Barber**", 0, 70, barber_value)
+            eating_out = st.slider("Set budget for **Eating Out**", 0, 500, eating_out_value)
+            groceries = st.slider("Set budget for **Groceries**", 0, 500, groceries_value)
+            holiday = st.slider("Set budget for **Holiday**", 0, 5000, holiday_value)
+            loan = st.slider("Set budget for **Loan**", 0, 200, loan_value)
+            other = st.slider("Set budget for **Other**", 0, 1000, other_value)
+            shopping = st.slider("Set budget for **Shopping**", 0, 400, shopping_value)
+            smoking = st.slider("Set budget for **Smoking**", 0, 400, smoking_value)
+            sa_investment = st.slider("Set budget for **SA Investment**", 0, 3000, sa_investment_value)
+            uncategorized = st.slider("Set budget for **Uncategorized**", 0, 3000, uncategorized_value)
+
+
+            # Calculate the total budget
+            total_budget = (
+                rent + tax + credit_cards + telephone + bank_charges + medical + barber +
+                eating_out + groceries + holiday + loan + other + transport + shopping +
+                smoking + subscriptions + sa_investment + uncategorized
+            )
+
             if st.button("Save Settings"):
                 settings['general']['version'] = version
                 settings['smoking_price_range']['smoke_min'] = smoke_min
                 settings['smoking_price_range']['smoke_max'] = smoke_max
 
+                settings['budget']['rent'] = rent
+                settings['budget']['tax'] = tax
+                settings['budget']['credit_cards'] = credit_cards
+                settings['budget']['telephone'] = telephone
+                settings['budget']['bank_charges'] = bank_charges
+                settings['budget']['medical'] = medical
+                settings['budget']['barber'] = barber
+                settings['budget']['eating_out'] = eating_out
+                settings['budget']['groceries'] = groceries
+                settings['budget']['holiday'] = holiday
+                settings['budget']['loan'] = loan
+                settings['budget']['other'] = other
+                settings['budget']['transport'] = transport
+                settings['budget']['shopping'] = shopping
+                settings['budget']['smoking'] = smoking
+                settings['budget']['subscriptions'] = subscriptions
+                settings['budget']['sa_investment'] = sa_investment
+                settings['budget']['uncategorized'] = uncategorized
+
+
                 save_settings(settings)
                 st.success("Settings updated successfully!")
 
+            st.markdown(f"### Total Budget: **{total_budget}**")
+
+        with col2:
+            pass
         # Display updated settings
         st.write("Current Settings:")
         st.write(settings)

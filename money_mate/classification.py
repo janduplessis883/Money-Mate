@@ -544,7 +544,7 @@ def get_account_balance(df):
 
 
 def prep_budget(df):
-    budget = df.groupby(by="Category")["Amount"].sum().reset_index()
+    budget = df.groupby(by="Budget Category")["Budget Amount"].sum().reset_index()
     budget.columns = ["custom_category", "Budget"]
     return budget
 
@@ -621,7 +621,9 @@ def prep_budget_metrics(current, days_remaining):
     current_minus_income = budget_df_min_income(current)
     variable_expenses = calculate_variable_expenses(current_minus_income)
     budget_used_sum = current_minus_income["Amount"].sum().round(2)
-    remaining_budget = current_minus_income["Diff"].sum().round(2)
+    remaining_budget = abs(
+        current_minus_income[current_minus_income["Diff"] > 0]["Diff"].sum().round(2)
+    )
     over_spent = abs(
         current_minus_income[current_minus_income["Diff"] < 0]["Diff"].sum().round(2)
     )
