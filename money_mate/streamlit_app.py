@@ -256,6 +256,7 @@ else:
             f"You have selected **£ {variable_expenses_slider}** for your variable expenses."
         )
 
+
         # Use the slider value in your application
         # For example, update remaining budget based on slider value
         remaining_budget_adjusted = remaining_budget - variable_expenses_slider
@@ -388,11 +389,11 @@ else:
     elif tabs == "Income & Expenses Report":
         st.header("Income & Expenses Report")
         st.sidebar.divider()
-        select_list = list(current["custom_category"].unique())
+        select_list = list(data["custom_category"].unique())
         selected_categories = st.sidebar.multiselect(
             "Select **Categories** to Display",
             options=select_list,
-            default=["Eating Out", "Groceries", "Smoking"],
+            default=select_list,
         )
         select_years = list(data["year"].unique())
         show_year = st.sidebar.multiselect(

@@ -423,6 +423,7 @@ transaction_name_rules = {
         "Sw5 Barbers Lt",
         "Cut And Go",
         "Old Brompton Barbers",
+        "Barber",
     ],
     "SA Investment": [
         "Thom",
@@ -516,6 +517,8 @@ def refine_by_name(row):
     return row["custom_category"]
 
 
+
+
 #  "Local amount", "Local currency", "Notes and #tags", "Address", "Description"
 def prep_account_statement(df):
     df.drop(
@@ -535,6 +538,7 @@ def prep_account_statement(df):
     df["custom_category"] = df.apply(classify_by_type, axis=1)
     df["custom_category"] = df.apply(refine_by_name, axis=1)
     df["Cumulative Amount"] = df["Amount"].cumsum().round(2)
+    df = apply_smoking_adjustment(df)
     return df
 
 
@@ -677,15 +681,17 @@ def return_cat_amount_date_df(filtered_data, period="W"):
 
 def calculate_smoking_adjustment(df):
     condition = (df["custom_category"] == "Groceries") & (
-        df["Amount"].between(-smoke_min_value, -smoke_max_value)
+        df["Amount"].between(-15, -10)
     )
+    print("Condition:\n", condition)
+    print("Selected Rows:\n", df.loc[condition])
     adjustment_amount = df.loc[condition, "Amount"].sum()
     return adjustment_amount
 
 
 def apply_smoking_adjustment(df):
     condition = (df["custom_category"] == "Groceries") & (
-        df["Amount"].between(-smoke_min_value, -smoke_max_value)
+        df["Amount"].between(-15, -10)
     )
     df.loc[condition, "custom_category"] = "Smoking"
     return df
