@@ -613,9 +613,8 @@ def prep_budget_metrics(current, days_remaining):
     total_budget = abs(current["Budget"].sum().round(2))
 
     income_value = (
-        abs(current.loc[current["custom_category"] == "Income", "Diff"].values[0])
-        if not current.loc[current["custom_category"] == "Income", "Diff"].empty
-        else 0
+        abs(current.loc[current["custom_category"] == "Income", "Amount"].values[0])
+
     )
 
     current_minus_income = budget_df_min_income(current)
