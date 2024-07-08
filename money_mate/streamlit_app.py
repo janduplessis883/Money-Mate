@@ -280,7 +280,7 @@ else:
         c2.metric(label="Remaining Budget", value="£ " + str(remaining_budget))
         c3.metric(label="Over-spent", value="£ " + str(over_spent))
         c4.metric(
-            label="Projected Spending this month.",
+            label="Total Spending this month.",
             value="£ " + str(total_budget + over_spent),
         )
 
@@ -366,7 +366,7 @@ else:
         st.altair_chart(combined_chart, use_container_width=True)
 
         c1, c2, c3, c4 = st.columns(4)
-        c1.metric(label="Total Monthly Budget", value="£ " + str(total_budget))
+        c1.metric(label="INCOME", value="£ " + str(income_value))
         c2.metric(label="Budget Used this Month", value="£ " + str(budget_used_sum))
         c3.metric(label="Remaining Allocation", value="£ " + str(remaining_budget))
         c4.metric(
