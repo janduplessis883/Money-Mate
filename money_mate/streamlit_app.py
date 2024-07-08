@@ -276,12 +276,12 @@ else:
         st.sidebar.divider()
 
         c1, c2, c3, c4 = st.columns(4)
-        c1.metric(label="Over Budget to date", value="£ " + str(over_spent))
-        c2.metric(label="Realized Surplus", value="£ " + str(actual_disposable_income))
-        c3.metric(label="Payday Countdown", value=str(days_remaining) + " days")
+        c1.metric(label="Total Monthly Budget", value="£ " + str(total_budget))
+        c2.metric(label="Remaining Budget", value="£ " + str(remaining_budget))
+        c3.metric(label="Over-spent", value="£ " + str(over_spent))
         c4.metric(
-            label="Daily Allowance (factoring in Over-spend)",
-            value="£ " + str(daily_allowance),
+            label="Remaining minus Over-spent",
+            value="£ " + str(total_budget - over_spent),
         )
 
         # Define the domain for the x-axis to ensure it covers both Difference and Budget values
