@@ -367,7 +367,7 @@ else:
 
         c1, c2, c3, c4 = st.columns(4)
         c1.metric(label="INCOME", value="£ " + str(income_value))
-        c2.metric(label="Budget Used this Month", value="£ " + str(budget_used_sum))
+        c2.metric(label="Remaining this Month", value="£ " + str(income_value - (total_budget + over_spent)))
         c3.metric(label="Remaining Allocation", value="£ " + str(remaining_budget))
         c4.metric(
             label="Anticipated Surplus", value="£ " + str(projected_disposable_income)
