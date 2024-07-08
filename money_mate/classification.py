@@ -526,6 +526,9 @@ def prep_account_statement(df):
             "Transaction ID",
             "Category split",
             "Receipt",
+            "Address",
+            "Description",
+            "Notes and #tags",
         ],
         inplace=True,
     )
@@ -538,7 +541,6 @@ def prep_account_statement(df):
     df["custom_category"] = df.apply(classify_by_type, axis=1)
     df["custom_category"] = df.apply(refine_by_name, axis=1)
     df["Cumulative Amount"] = df["Amount"].cumsum().round(2)
-    df = apply_smoking_adjustment(df)
     return df
 
 
@@ -606,18 +608,37 @@ def calculate_variable_expenses(current):
             | (current["custom_category"] == "Shopping")
             | (current["custom_category"] == "Smoking")
             | (current["custom_category"] == "Transport")
+            | (current["custom_category"] == "Other")
         )
     ]
     variable_expenses = variable_expenses_df["Budget"].sum()
 
-    return variable_expenses
+    return variable_expenses.round(2)
+
+def calculate_fixed_expenses(current):
+    fixed_expenses_df = current[
+        (
+            (current["custom_category"] == "Rent")
+            | (current["custom_category"] == "Loan")
+            | (current["custom_category"] == "Tax")
+            | (current["custom_category"] == "Telephone")
+            | (current["custom_category"] == "Credit Cards")
+            | (current["custom_category"] == "Bank Charges")
+            | (current["custom_category"] == "Medical")
+        )
+    ]
+    fixed_expenses = fixed_expenses_df["Budget"].sum()
+
+    return fixed_expenses.round(2)
 
 
 def prep_budget_metrics(current, days_remaining):
     total_budget = abs(current["Budget"].sum().round(2))
 
-    income_value = 3028.98
-
+    income_row = current[current['custom_category'] == 'Income']
+    income_amount = income_row['Amount'].values
+    if len(income_amount) == 1:
+        income_amount = income_amount[0]
     current_minus_income = budget_df_min_income(current)
     variable_expenses = calculate_variable_expenses(current_minus_income)
     budget_used_sum = current_minus_income["Amount"].sum().round(2)
@@ -629,21 +650,22 @@ def prep_budget_metrics(current, days_remaining):
     )
     over_spent = abs(over_spent)
 
+
     daily_allowance = (
         ((variable_expenses - over_spent) / days_remaining).round(2)
         if days_remaining
         else 0
     )
 
-    projected_disposable_income = (income_value - total_budget).round(2)
-    actual_disposable_income = ((income_value - total_budget) - abs(over_spent)).round(
+    projected_disposable_income = (income_amount - total_budget).round(2)
+    actual_disposable_income = ((income_amount - total_budget) - abs(over_spent)).round(
         2
     )
 
     return (
         variable_expenses,
         total_budget,
-        income_value,
+        income_amount,
         budget_used_sum,
         over_spent,
         remaining_budget,

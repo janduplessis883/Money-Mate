@@ -8,7 +8,7 @@ credit_cards = 168
 telephone = 186
 bank_charges = 8
 medical = 13
-barber = 36
+barber = 40
 eating_out = 100
 groceries = 200
 holiday = 0
@@ -23,4 +23,4 @@ uncategorized = 0
 
 [smoking_price_range]
 smoke_min = 11.2
-smoke_max = 15.5
+smoke_max = 19.85

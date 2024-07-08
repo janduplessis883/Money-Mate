@@ -188,7 +188,7 @@ else:
     (
         variable_expenses,
         total_budget,
-        income_value,
+        income_amount,
         budget_used_sum,
         over_spent,
         remaining_budget,
@@ -367,15 +367,15 @@ else:
         st.altair_chart(combined_chart, use_container_width=True)
 
         c1, c2, c3, c4 = st.columns(4)
-        c1.metric(label="INCOME", value="£ " + str(income_value))
-        c2.metric(label="Remaining this Month", value="£ " + str(income_value - (total_budget + over_spent)))
-
+        c1.metric(label="INCOME", value="£ " + str(income_amount))
+        c2.metric(label="Remaining this Month", value="£ " + str((income_amount - (total_budget + over_spent)).round(2)))
+        c3.metric(label="Fixed Expenses", value="£ " + str(calculate_fixed_expenses(current)))
         c4.metric(
             label="Days till next Paydat", value=str(days_remaining)+" days"
         )
 
-
-
+        st.markdown(f"**:blue[Income]** minus **:red[Fixed Expenses]** = **£ {(income_amount - calculate_fixed_expenses(current)).round(2)}**")
+        st.markdown(f"**:green[Variable Expenses]** £ {(calculate_variable_expenses(current)).round(2)} plus **:red[Fixed Expenses]** = **£ {(calculate_variable_expenses(current) + calculate_fixed_expenses(current)).round(2)}**")
         if st.sidebar.toggle("Show Bank Statement"):
             st.divider()
             st.subheader("Current Bank Statement")
@@ -545,7 +545,7 @@ else:
 
         with st.expander("**Fixed Expenses** - calculation", icon=":material/calculate:"):
             st.markdown(
-                f"Salary: **£ {income_value}** - Budget: **£ {total_budget}** = Left-over: **£ {projected_disposable_income}**"
+                f"Salary: **£ {income_amount}** - Budget: **£ {total_budget}** = Left-over: **£ {projected_disposable_income}**"
             )
             st.markdown(
                 f":blue[**Variable Expenses**: (Barber, Eating Out, Groceries, Holiday, Shopping, Smoking, Transport): **£ {variable_expenses}**] - :red[over-spent: **£ {over_spent}**] = **£ {(variable_expenses - over_spent).round(2)}**"
