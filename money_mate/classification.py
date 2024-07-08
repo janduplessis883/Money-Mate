@@ -681,17 +681,15 @@ def return_cat_amount_date_df(filtered_data, period="W"):
 
 def calculate_smoking_adjustment(df):
     condition = (df["custom_category"] == "Groceries") & (
-        df["Amount"].between(-15, -10)
+        df["Amount"].between(-smoke_max_value, -smoke_min_value)
     )
-    print("Condition:\n", condition)
-    print("Selected Rows:\n", df.loc[condition])
     adjustment_amount = df.loc[condition, "Amount"].sum()
     return adjustment_amount
 
 
 def apply_smoking_adjustment(df):
     condition = (df["custom_category"] == "Groceries") & (
-        df["Amount"].between(-15, -10)
+        df["Amount"].between(-smoke_max_value, -smoke_min_value)
     )
     df.loc[condition, "custom_category"] = "Smoking"
     return df
