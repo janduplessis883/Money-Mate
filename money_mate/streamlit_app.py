@@ -281,7 +281,7 @@ else:
         c3.metric(label="Over-spent", value="£ " + str(over_spent))
         c4.metric(
             label="Remaining minus Over-spent",
-            value="£ " + str(total_budget - over_spent),
+            value="£ " + str(total_budget + over_spent),
         )
 
         # Define the domain for the x-axis to ensure it covers both Difference and Budget values
