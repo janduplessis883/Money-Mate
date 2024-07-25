@@ -1,6 +1,5 @@
 import pandas as pd
 from datetime import datetime, timedelta
-import streamlit as st
 import toml
 
 # Load Setting via settings.toml file
@@ -18,6 +17,7 @@ smoke_min_value = settings['smoking_price_range']['smoke_min']
 smoke_max_value = settings['smoking_price_range']['smoke_max']
 
 income_amount = settings['salary']['income']
+pay_date_value = settings['salary']['pay_date']
 
 transaction_type_rules = {
     "wise_cashback": "Income",
@@ -356,6 +356,7 @@ transaction_name_rules = {
         "Alesya Zhilenkova",
         "Koronapay Europe",
         "Revolut",
+        "Anewskincar",
     ],
     "Credit Cards": [
         "Capital One",
@@ -437,6 +438,8 @@ transaction_name_rules = {
         "Capital One Mobile App",
         "Jan Du Plessis Virgin Online Current",
         "Wise Transfer",
+        "Igor Lokmanis",
+        "Jean-Pierre Virgin 2",
     ],
     "Rent": ["Hampton Management", "Hampton Rent", "Electricity"],
     "Smoking": [
@@ -517,10 +520,7 @@ def refine_by_name(row):
                 return category
     return row["custom_category"]
 
-
-
-
-#  "Local amount", "Local currency", "Notes and #tags", "Address", "Description"
+# "Local amount", "Local currency", "Notes and #tags", "Address", "Description"
 def prep_account_statement(df):
     df.drop(
         columns=[
@@ -544,35 +544,29 @@ def prep_account_statement(df):
     df["Cumulative Amount"] = df["Amount"].cumsum().round(2)
     return df
 
-
 def get_account_balance(df):
     account_balance = df["Cumulative Amount"].iloc[-1]
     return account_balance
-
 
 def prep_budget(df):
     budget = df.groupby(by="Budget Category")["Budget Amount"].sum().reset_index()
     budget.columns = ["custom_category", "Budget"]
     return budget
 
-
 def prep_statement_import_to_budget(df):
     df["Date"] = pd.to_datetime(df["Date"])
     current_date = datetime.now()
 
-    if current_date.day >= 24:
-        start_date = current_date.replace(day=24)
+    if current_date.day >= pay_date_value:
+        start_date = current_date.replace(day=pay_date_value)
     else:
-        start_date = (current_date - pd.DateOffset(months=1)).replace(day=24)
+        start_date = (current_date - pd.DateOffset(months=1)).replace(day=pay_date_value)
 
     filtered_bank_statement = df[df["Date"] >= start_date]
-    next_24th = current_date.replace(day=25)
-    if current_date.day > 25:
-        next_24th = (current_date + pd.DateOffset(months=1)).replace(day=24)
-    days_remaining = (next_24th - current_date).days
+    next_pay_date = start_date + pd.DateOffset(months=1)
+    days_remaining = (next_pay_date - current_date).days
 
     return filtered_bank_statement, days_remaining
-
 
 def generate_budget_df(filtered_bank_statement, budget):
     current_expenses_by_cat = (
@@ -588,7 +582,6 @@ def generate_budget_df(filtered_bank_statement, budget):
 
     return current
 
-
 def budget_df_min_income(current):
     current_minus_income = current[
         (
@@ -597,7 +590,6 @@ def budget_df_min_income(current):
         )
     ]
     return current_minus_income
-
 
 def calculate_variable_expenses(current):
     variable_expenses_df = current[
@@ -632,7 +624,6 @@ def calculate_fixed_expenses(current):
 
     return fixed_expenses.round(2)
 
-
 def prep_budget_metrics(current, days_remaining):
     total_budget = abs(current["Budget"].sum().round(2))
     variable_expenses = calculate_variable_expenses(current)
@@ -646,9 +637,8 @@ def prep_budget_metrics(current, days_remaining):
     )
     over_spent = abs(over_spent)
 
-
     daily_allowance = (
-        ((calculate_variable_expenses(current)) / days_remaining).round(2)
+        (calculate_variable_expenses(current) / days_remaining).round(2)
         if days_remaining
         else 0
     )
@@ -669,7 +659,6 @@ def prep_budget_metrics(current, days_remaining):
         actual_disposable_income,
     )
 
-
 def return_cat_amount_df(filtered_data):
     cat_amount_df = (
         filtered_data.groupby("custom_category").agg({"Amount": "sum"}).reset_index()
@@ -677,12 +666,10 @@ def return_cat_amount_df(filtered_data):
 
     return cat_amount_df
 
-
 def return_name_amount_df(filtered_data):
     name_amount_df = filtered_data.groupby("Name").agg({"Amount": "sum"}).reset_index()
 
     return name_amount_df
-
 
 def return_cat_amount_date_df(filtered_data, period="W"):
     filtered_data = filtered_data.set_index("Date")
@@ -695,14 +682,12 @@ def return_cat_amount_date_df(filtered_data, period="W"):
 
     return cat_amount_date_df
 
-
 def calculate_smoking_adjustment(df):
     condition = (df["custom_category"] == "Groceries") & (
         df["Amount"].between(-smoke_max_value, -smoke_min_value)
     )
     adjustment_amount = df.loc[condition, "Amount"].sum()
     return adjustment_amount
-
 
 def apply_smoking_adjustment(df):
     condition = (df["custom_category"] == "Groceries") & (

@@ -50,6 +50,7 @@ subscriptions_value = settings['budget']['subscriptions']
 sa_investment_value = settings['budget']['sa_investment']
 uncategorized_value = settings['budget']['uncategorized']
 income_amount = settings['salary']['income']
+pay_date_value = settings['salary']['pay_date']
 # End of Settings --------------------------------------------------------------
 
 # Set the page configuration to have a wide layout and the sidebar collapsed on load
@@ -584,6 +585,7 @@ else:
 
             st.subheader("Income")
             income = st.number_input("Enter Salary / Income for the month.", value=income_amount)
+            pay_date = st.number_input("Monthly Pay Date.", value=pay_date_value)
             # Create sliders for each category
             st.subheader("Budget Settings (Fixed Expenses)")
             rent = st.slider("Set budget for **Rent**", 0, 1500, rent_value)
@@ -594,6 +596,9 @@ else:
             medical = st.slider("Set budget for **Medical**", 0, 50, medical_value)
             transport = st.slider("Set budget for **Transport**", 0, 100, transport_value)
 
+            total_fixed = (rent + tax + credit_cards + telephone + bank_charges + medical + transport)
+            st.markdown(f"### Total Fixed Expenses: **{total_fixed}**")
+            st.divider()
             st.subheader("Budget Settings (Variable Expenses)")
             subscriptions = st.slider("Set budget for **Subscriptions**", 0, 200, subscriptions_value)
             barber = st.slider("Set budget for **Barber**", 0, 70, barber_value)
@@ -609,11 +614,9 @@ else:
 
 
             # Calculate the total budget
-            total_budget = (
-                rent + tax + credit_cards + telephone + bank_charges + medical + barber +
-                eating_out + groceries + holiday + loan + other + transport + shopping +
-                smoking + subscriptions + sa_investment + uncategorized
-            )
+
+            total_variable = (barber + eating_out + groceries + holiday + loan + other + shopping + smoking + subscriptions + sa_investment + uncategorized)
+            total_budget = total_fixed + total_variable
 
             if st.button("Save Settings"):
                 settings['general']['version'] = version
@@ -640,10 +643,11 @@ else:
                 settings['budget']['uncategorized'] = uncategorized
 
                 settings['salary']['income'] = income
+                settings['salary']['pay_date'] = pay_date
 
                 save_settings(settings)
                 st.success("Settings updated successfully!")
-
+            st.markdown(f"### Total Variable Expenses: **{total_variable}**")
             st.markdown(f"### Total Budget: **{total_budget}**")
 
         with col2:

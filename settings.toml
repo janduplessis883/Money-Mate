@@ -9,10 +9,10 @@ telephone = 186
 bank_charges = 8
 medical = 13
 barber = 40
-eating_out = 100
-groceries = 200
+eating_out = 60
+groceries = 180
 holiday = 0
-loan = 200
+loan = 0
 other = 300
 transport = 50
 shopping = 0
@@ -23,7 +23,8 @@ uncategorized = 0
 
 [smoking_price_range]
 smoke_min = 11.2
-smoke_max = 19.85
+smoke_max = 15.25
 
 [salary]
-income = 3028.98
+income = 2875.47
+pay_date = 23
