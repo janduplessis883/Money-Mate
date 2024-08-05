@@ -117,7 +117,6 @@ else:
             "Account Summary",
             "Budget",
             "Income & Expenses Report",
-            "View | Update - Budget",
             "View | Update - Bank Statement",
             "Budget Calculations",
             "Settings",
@@ -167,6 +166,7 @@ else:
                 f"**Smoking** adjustment → **£ {smoking_adjustment_amount}**", icon="🚬"
             )
             st.session_state.last_fetch_personal_account = time.time()
+
 
     # Read Budget
     budget_data = {
@@ -507,24 +507,6 @@ else:
             st.divider()
             st.dataframe(cat_amount_date_df_mth)
 
-    elif tabs == "View | Update - Budget":
-        st.header("Budget Documents")
-        with st.expander(label="Budget - DataFrame", icon=":material/savings:"):
-            st.dataframe(budget)
-
-        with st.expander(
-            label="Budget prepped with Statement Info - DataFrame",
-            icon=":material/savings:",
-        ):
-            st.dataframe(current)
-
-        with st.expander(label="Budget - Google Sheet", icon=":material/savings:"):
-            # Embed Google Sheet in an expander
-            google_sheet_url = "https://docs.google.com/spreadsheets/d/1bpW10hRPxTDwQ1UjEBsKLKwZ9tf9RTFl91GQhVv1luI/edit?gid=1571834654#gid=1571834654"
-            st.components.v1.html(
-                f'<iframe src="{google_sheet_url}" width="100%" height="600"></iframe>',
-                height=600,
-            )
 
     elif tabs == "View | Update - Bank Statement":
         st.header("Bank Statements")

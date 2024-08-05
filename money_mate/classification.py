@@ -207,6 +207,7 @@ transaction_name_rules = {
         "Ollie’s House Limited",
         "The Plough & Harrow",
         "Segar & Snuff Parl",
+        "Popeyes",
     ],
     "Transport": [
         "Sendwave",
@@ -219,6 +220,9 @@ transaction_name_rules = {
         "Easi Rent",
         "easirent",
         "TIER",
+        "Lime Ride Welp",
+        "Lime Auth Welp",
+        "Lime Pass Welp",
     ],
     "Subscriptions": [
         "Wordtune",
@@ -311,6 +315,7 @@ transaction_name_rules = {
         "plan.com",
         "giffgaff",
         "Three",
+        "Invoice 240724538588",
     ],
     "Loan": [
         "Credit Resource Solutions",
@@ -327,6 +332,7 @@ transaction_name_rules = {
         "24/7 Zafash Pharmacy",
         "Jhoots Pharmacy",
         "Hammersmith Pharmacy",
+        "Nhsbsa Ppc 2",
     ],
     "Other": [
         "James Vokins",
@@ -440,6 +446,7 @@ transaction_name_rules = {
         "Wise Transfer",
         "Igor Lokmanis",
         "Jean-Pierre Virgin 2",
+        "Jan Du Plessis Barclays",
     ],
     "Rent": ["Hampton Management", "Hampton Rent", "Electricity"],
     "Smoking": [
@@ -475,6 +482,7 @@ startswith_rules = {
         "Taxi",
         "Uber",
         "Zipcar",
+        "Lime",
     ],
     "Eating Out": [
         "Toogoodt",
