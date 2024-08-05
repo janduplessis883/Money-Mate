@@ -12,7 +12,7 @@ notebook
 colorama
 pytest
 black
-streamlit
+streamlit==1.36.0
 loguru
 
 # SHeetHelper Reequirements
