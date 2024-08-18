@@ -286,7 +286,7 @@ else:
         st.sidebar.divider()
 
         c1, c2, c3, c4 = st.columns(4)
-        c1.metric(label="Total Monthly Budget", value="£ " + str(total_budget))
+        c1.metric(label="Total Monthly Expenses", value="£ " + str(total_budget))
         c2.metric(label="Remaining Budget", value="£ " + str(remaining_budget))
         c3.metric(label="Over-spent", value="£ " + str(over_spent))
         c4.metric(
@@ -378,7 +378,7 @@ else:
         c1, c2, c3, c4 = st.columns(4)
         c1.metric(label="INCOME", value="£ " + str(income_amount))
         c2.metric(label="Remaining this Month", value="£ " + str((income_amount - (total_budget + over_spent)).round(2)))
-        c3.metric(label="Fixed Expenses", value="£ " + str(calculate_fixed_expenses(current)))
+        c3.metric(label="Daily Allowance", value="£ " + str(((income_amount - (total_budget + over_spent))/days_remaining).round(2)) )
         c4.metric(
             label="Days till next Paydat", value=str(days_remaining)+" days"
         )
