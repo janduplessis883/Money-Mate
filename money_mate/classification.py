@@ -472,6 +472,7 @@ transaction_name_rules = {
         "Atlantic Medical",
         "LONDON MEDICAL ASSOCIATES LTD",
         "Tide Business Account",
+        "DRS STEEDEN , HUSS",
     ],
 }
 
